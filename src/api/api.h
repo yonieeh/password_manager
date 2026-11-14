@@ -1,0 +1,1 @@
+void generate_password(char *buf, int size, bool lowercase, bool uppercase, bool numbers, bool symbols);
