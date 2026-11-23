@@ -22,14 +22,21 @@ void set_buffer(void) {
 static char **split_by_sep(char *str, char *sep)
 {
   char **new_str = calloc(MAX_SPLIT, sizeof(char *));
-  int index = 0, len;
+  int index = 0;
+  size_t len;
 
   char *token = strtok(str, sep);
-  while (token != NULL)
+  while (token != NULL && index < MAX_SPLIT)      /* sin overflow del arreglo */
   {
     new_str[index] = calloc(BUFFER_SIZE, sizeof(char));
     strcpy(new_str[index++], token);
     token = strtok(NULL, sep);
+  }
+
+  if (index == 0)                                  /* línea sin tokens */
+  {
+    new_str[0] = calloc(1, sizeof(char));          /* input[0] = "" */
+    return new_str;
   }
 
   // Remove dangling Windows (\r) and Unix (\n) newlines
@@ -44,12 +51,12 @@ static char **split_by_sep(char *str, char *sep)
 /*
  * Reads a line fo user input and returns it as an array of strings
  */
-char **read_user_input()
+char **read_user_input(void)
 {
   char input[BUFFER_SIZE];
-  fgets(input, BUFFER_SIZE, stdin);
-  char **split_input = split_by_sep(input, " ");
-  return split_input;
+  if (fgets(input, BUFFER_SIZE, stdin) == NULL)
+    return NULL;                      /* EOF o error */
+  return split_by_sep(input, " ");
 }
 
 /*

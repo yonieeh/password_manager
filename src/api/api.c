@@ -2,6 +2,7 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdint.h>
 
 #define LOWER   "abcdefghijklmnopqrstuvwxyz"
 #define UPPER   "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
@@ -22,7 +23,7 @@ int generate_password(char *buf, size_t size, bool lower, bool upper, bool digit
     return -1;
 
   for (size_t i = 0; i < size - 1; i++)
-    buf[i] = pool[arc4random_uniform(n)];
+    buf[i] = pool[arc4random_uniform((uint32_t) n)];
   buf[size - 1] = '\0';
 
   return 0;
