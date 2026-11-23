@@ -9,3 +9,4 @@
 char **read_user_input();
 void set_buffer(void);
 void free_user_input(char **input);
+char *read_line(void);

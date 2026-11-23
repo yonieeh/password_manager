@@ -59,6 +59,25 @@ char **read_user_input(void)
   return split_by_sep(input, " ");
 }
 
+/* 
+Reads a whole line from user input and returns it as a malloc'd whole string without newline, or NULL on EOF/error. Caller must free. 
+*/
+char *read_line(void)
+{
+  char *line = NULL;
+  size_t cap = 0;
+
+  ssize_t n = getline(&line, &cap, stdin);
+  if (n < 0) {
+    free(line);
+    return NULL;
+  }
+
+  if (n > 0 && line[n - 1] == '\n') line[--n] = '\0';
+  if (n > 0 && line[n - 1] == '\r') line[--n] = '\0';
+  return line;
+}
+
 /*
  * Frees user input obtained by the read_user_input function
  */
