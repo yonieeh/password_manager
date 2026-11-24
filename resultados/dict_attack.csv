@@ -1,0 +1,5 @@
+config,ops,mem_mib,found,position,tried,seconds,guesses_per_s
+debil_1x8MiB,1,8,yes,40,40,0.127,315.345
+liviana_2x64MiB,2,64,yes,40,40,1.715,23.320
+moderada_3x256MiB,3,256,yes,40,40,10.431,3.835
+fuerte_4x512MiB,4,512,yes,40,40,29.354,1.363
