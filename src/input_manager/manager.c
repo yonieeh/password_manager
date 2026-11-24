@@ -2,6 +2,9 @@
 #include <stdio.h>  // FILE, fopen, fclose, etc.
 #include <string.h> // strtok, strcpy, etc.
 #include <stdlib.h> // malloc, calloc, free, etc.
+#include <termios.h>
+#include <unistd.h>
+#include <stdbool.h>
 
 // Import the header file of this module, because it has the constant definitions
 #include "manager.h"
@@ -88,4 +91,31 @@ void free_user_input(char **input)
     free(input[i]);
   }
   free(input);
+}
+
+#include <termios.h>
+#include <unistd.h>
+
+/* Como read_line(), pero sin mostrar lo que se escribe. */
+char *read_secret_line(void)
+{
+  struct termios old, hidden;
+  bool tty = isatty(STDIN_FILENO);
+
+  if (tty)
+  {
+    if (tcgetattr(STDIN_FILENO, &old) != 0) return NULL;
+    hidden = old;
+    hidden.c_lflag &= ~(tcflag_t) ECHO;
+    if (tcsetattr(STDIN_FILENO, TCSAFLUSH, &hidden) != 0) return NULL;
+  }
+
+  char *line = read_line();
+
+  if (tty)
+  {
+    tcsetattr(STDIN_FILENO, TCSAFLUSH, &old);   /* siempre restaurar */
+    printf("\n");   /* con el eco apagado, el Enter del usuario no se ve */
+  }
+  return line;
 }
